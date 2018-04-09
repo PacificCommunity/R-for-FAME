@@ -1,0 +1,100 @@
+---
+title: 'Data manipulation #1'
+---
+
+```{r, eval=FALSE}
+# Working directory
+# To know what my working directory is right now
+#getwd()
+#setwd()
+
+list.files(pattern='.csv')
+list.files('Datasets/', pattern='.csv')
+
+vanuatu.dat <- read.csv('Datasets/Vanuatu report 65.csv')
+## if using read.table make sure to specify header=TRUE
+head(vanuatu.dat)
+
+library(tidyverse) # or require(...)
+# makes the function in package tidyverse available
+
+# 1d vector []
+# 2d mixing up data types (character, number)
+# dataframe
+
+# [rows,columns]
+# select row 1 from vanuatu.dat
+vanuatu.dat[1,]
+
+# select rows 2 and 18 from vanuatu.dat
+vanuatu.dat[c(2,18),]
+
+# select 3rd column from vanuatu.dat
+head(vanuatu.dat[,3])
+tail(vanuatu.dat[,c(5,17,21:25)], 10)
+
+# how many rows in the dataset?
+nrow(vanuatu.dat)
+ncol(vanuatu.dat) # columns
+dim(vanuatu.dat) # both
+dim(vanuatu.dat)[1] # can combine functions with []
+# to grab the row numbers only
+
+# introducing....... the $!
+# when we select columns with numbers, we need to know
+# which column number our variable is in
+names(vanuatu.dat)
+t(names(vanuatu.dat))
+# e.g. the catch sp_n is in column #36
+mean(vanuatu.dat[,36]) # mean catch
+# (this is really inconvenient)
+# instead we can select a column directly from its
+# name using the $
+mean(vanuatu.dat$sp_n)
+mean(vanuatu.dat$sp_n) + sd(vanuatu.dat$sp_n)
+mean(vanuatu.dat$sp_n) - sd(vanuatu.dat$sp_n)
+
+# can rename columns with rename (from dplyr)
+vanuatu.dat <- rename(vanuatu.dat, kiwi=trip_date)
+# (need to reassign back to dataset, otherwise it 
+# just prints in the console and does not save it)
+
+# set-it back because kiwi is a dumb column name
+vanuatu.dat <- rename(vanuatu.dat, trip_date=kiwi)
+
+# can select columns to subset dataset 
+# using function select (from dplyr)
+# in some cases function names are duplicated 
+# between packages (last package to load duplicated
+# function names wins) so it can be better to 
+# specify the package and the function when using 
+# some more common function names (e.g. select)
+# format for this is packagename::functionname
+van1 <- dplyr::select(vanuatu.dat, 
+              trip_date, sp_name, sp_code, 
+              catch_n=sp_n, catch_kg=sp_kg)
+
+# to know how many unique values are in a column
+length(unique(van1$sp_name))
+length(unique(van1$sp_code))
+# can also use count() but does not work with all 
+# data types... 
+
+# find out the most often observed species in the dataset
+top10 <- head(sort(table(van1$sp_name), 
+                   decreasing = TRUE),10)
+
+## ordering or sorting values in R
+obj3 <- c(23, 4, 12, 67)
+order(obj3)
+
+## Define a focus species: 
+focussp <- "DEEPWATER RED SNAPPER"
+
+## Filter the dataset to keep only observations
+## for this focus species: 
+datfocus <- filter(van1, sp_name == focussp)
+## Find how many catch records have zero
+sum(datfocus$catch_n==0)
+mean(datfocus$catch_n==0)
+```

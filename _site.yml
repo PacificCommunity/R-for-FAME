@@ -1,0 +1,8 @@
+name: "R-for-FAME"
+navbar:
+  title: "R for FAME"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "First R session"
+      href: data-manip-no1.html
