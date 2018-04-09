@@ -5,8 +5,8 @@ title: 'Data manipulation #1'
 ```{r, eval=FALSE}
 # Working directory
 # To know what my working directory is right now
-#getwd()
-#setwd()
+getwd()
+setwd()
 
 list.files(pattern='.csv')
 list.files('Datasets/', pattern='.csv')
