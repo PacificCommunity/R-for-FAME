@@ -1,4 +1,5 @@
 name: "R-for-FAME"
+output_dir: "."
 navbar:
   title: "R for FAME"
   left:

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Data manipulation #1</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R for FAME</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="data-manip-no1.html">First R session</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data manipulation #1</h1>
+
+</div>
+
+
+<pre class="r"><code># Working directory
+# To know what my working directory is right now
+#getwd()
+#setwd()
+
+list.files(pattern=&#39;.csv&#39;)
+list.files(&#39;Datasets/&#39;, pattern=&#39;.csv&#39;)
+
+vanuatu.dat &lt;- read.csv(&#39;Datasets/Vanuatu report 65.csv&#39;)
+## if using read.table make sure to specify header=TRUE
+head(vanuatu.dat)
+
+library(tidyverse) # or require(...)
+# makes the function in package tidyverse available
+
+# 1d vector []
+# 2d mixing up data types (character, number)
+# dataframe
+
+# [rows,columns]
+# select row 1 from vanuatu.dat
+vanuatu.dat[1,]
+
+# select rows 2 and 18 from vanuatu.dat
+vanuatu.dat[c(2,18),]
+
+# select 3rd column from vanuatu.dat
+head(vanuatu.dat[,3])
+tail(vanuatu.dat[,c(5,17,21:25)], 10)
+
+# how many rows in the dataset?
+nrow(vanuatu.dat)
+ncol(vanuatu.dat) # columns
+dim(vanuatu.dat) # both
+dim(vanuatu.dat)[1] # can combine functions with []
+# to grab the row numbers only
+
+# introducing....... the $!
+# when we select columns with numbers, we need to know
+# which column number our variable is in
+names(vanuatu.dat)
+t(names(vanuatu.dat))
+# e.g. the catch sp_n is in column #36
+mean(vanuatu.dat[,36]) # mean catch
+# (this is really inconvenient)
+# instead we can select a column directly from its
+# name using the $
+mean(vanuatu.dat$sp_n)
+mean(vanuatu.dat$sp_n) + sd(vanuatu.dat$sp_n)
+mean(vanuatu.dat$sp_n) - sd(vanuatu.dat$sp_n)
+
+# can rename columns with rename (from dplyr)
+vanuatu.dat &lt;- rename(vanuatu.dat, kiwi=trip_date)
+# (need to reassign back to dataset, otherwise it 
+# just prints in the console and does not save it)
+
+# set-it back because kiwi is a dumb column name
+vanuatu.dat &lt;- rename(vanuatu.dat, trip_date=kiwi)
+
+# can select columns to subset dataset 
+# using function select (from dplyr)
+# in some cases function names are duplicated 
+# between packages (last package to load duplicated
+# function names wins) so it can be better to 
+# specify the package and the function when using 
+# some more common function names (e.g. select)
+# format for this is packagename::functionname
+van1 &lt;- dplyr::select(vanuatu.dat, 
+              trip_date, sp_name, sp_code, 
+              catch_n=sp_n, catch_kg=sp_kg)
+
+# to know how many unique values are in a column
+length(unique(van1$sp_name))
+length(unique(van1$sp_code))
+# can also use count() but does not work with all 
+# data types... 
+
+# find out the most often observed species in the dataset
+top10 &lt;- head(sort(table(van1$sp_name), 
+                   decreasing = TRUE),10)
+
+## ordering or sorting values in R
+obj3 &lt;- c(23, 4, 12, 67)
+order(obj3)
+
+## Define a focus species: 
+focussp &lt;- &quot;DEEPWATER RED SNAPPER&quot;
+
+## Filter the dataset to keep only observations
+## for this focus species: 
+datfocus &lt;- filter(van1, sp_name == focussp)
+## Find how many catch records have zero
+sum(datfocus$catch_n==0)
+mean(datfocus$catch_n==0)</code></pre>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
