@@ -1,0 +1,72 @@
+---
+title: "Maps in R (!!!)"
+author: "Laura Tremblay-Boyer"
+date: "5 April 2018"
+output: 
+ html_document: 
+  toc: true
+  toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, # shuts down messages
+                      warning = FALSE, 
+                      cache = TRUE) # saves chunk content so it doesn't rerun everytime
+```
+
+```{r}
+library(tidyverse)
+options(stringsAsFactors=FALSE) # turn-off automatic factors
+library(maps)
+library(mapdata)
+library(maptools)
+load('Pacific-region-to-keep.RData', verbose=TRUE)
+```
+
+# Data import and formatting
+In R data objects have extension .RData, then can be saved with `save()` and loaded back in R with `load()`
+
+```{r}
+load('lbest-sample.RData', verbose=TRUE) #lbest
+```
+
+## Data formatting
+```{r}
+yft80 <- lbest %>% filter(yy==1980) %>%
+  group_by(lond, latd) %>% 
+  summarise(catch=sum(yft_no), 
+            effort=sum(hhooks)) %>%
+  mutate(cpue=catch/effort)
+head(yft80)
+```
+
+# Making the map 
+The ggplot function to do heatmaps is called `geom_tile()`
+```{r}
+ggplot() + 
+  geom_tile(data=yft80, aes(x=lond, y=latd, fill=cpue), colour='white') +
+  theme_bw() + 
+  coord_equal() + 
+  scale_fill_distiller(palette='Spectral')
+```
+
+## Adding continents to my map 
+`world2Hires` is a high resolution database of continent outlines
+The `2` means it's the Pacific-centred version
+```{r}
+all_states <- map_data('world2Hires')
+reg2keep <- c(reg2keep, 'Vietnam')
+states <- all_states %>% filter(region %in% reg2keep)
+```
+
+Now that I have formatted by continent dataset, I can add it 
+as a layer to ggplot: 
+```{r}
+ggplot() + 
+  geom_tile(data=yft80, aes(x=lond, y=latd, fill=cpue), colour='white') +
+  geom_polygon(data=states, aes(x=long, y=lat, group=group), fill='grey95', colour='navy') + 
+  theme_bw() + 
+  coord_equal(xlim=c(100,280), ylim=c(-50,50)) + 
+  scale_fill_distiller(palette='Spectral')
+```
