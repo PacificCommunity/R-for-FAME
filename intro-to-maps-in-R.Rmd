@@ -12,7 +12,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE, 
                       message = FALSE, # shuts down messages
                       warning = FALSE, 
-                      cache = TRUE) # saves chunk content so it doesn't rerun everytime
+                      cache = TRUE,
+                      eval = FALSE) # saves chunk content so it doesn't rerun everytime
 ```
 
 ```{r}
