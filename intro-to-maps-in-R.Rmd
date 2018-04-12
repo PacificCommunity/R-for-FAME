@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE, # shuts down messages
                       warning = FALSE, 
                       cache = TRUE,
-                      eval = FALSE) # saves chunk content so it doesn't rerun everytime
+                      eval = TRUE) # saves chunk content so it doesn't rerun everytime
 ```
 
 ```{r}
@@ -22,14 +22,14 @@ options(stringsAsFactors=FALSE) # turn-off automatic factors
 library(maps)
 library(mapdata)
 library(maptools)
-load('Pacific-region-to-keep.RData', verbose=TRUE)
+load('Datasets/Pacific-region-to-keep.RData', verbose=TRUE)
 ```
 
 # Data import and formatting
 In R data objects have extension .RData, then can be saved with `save()` and loaded back in R with `load()`
 
 ```{r}
-load('lbest-sample.RData', verbose=TRUE) #lbest
+load('Datasets/lbest-sample.RData', verbose=TRUE) #lbest
 ```
 
 ## Data formatting

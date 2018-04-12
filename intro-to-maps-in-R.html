@@ -307,11 +307,15 @@ options(stringsAsFactors=FALSE) # turn-off automatic factors
 library(maps)
 library(mapdata)
 library(maptools)
-load(&#39;Pacific-region-to-keep.RData&#39;, verbose=TRUE)</code></pre>
+load(&#39;Datasets/Pacific-region-to-keep.RData&#39;, verbose=TRUE)</code></pre>
+<pre><code>## Loading objects:
+##   reg2keep</code></pre>
 <div id="data-import-and-formatting" class="section level1">
 <h1>Data import and formatting</h1>
 <p>In R data objects have extension .RData, then can be saved with <code>save()</code> and loaded back in R with <code>load()</code></p>
-<pre class="r"><code>load(&#39;lbest-sample.RData&#39;, verbose=TRUE) #lbest</code></pre>
+<pre class="r"><code>load(&#39;Datasets/lbest-sample.RData&#39;, verbose=TRUE) #lbest</code></pre>
+<pre><code>## Loading objects:
+##   lbest</code></pre>
 <div id="data-formatting" class="section level2">
 <h2>Data formatting</h2>
 <pre class="r"><code>yft80 &lt;- lbest %&gt;% filter(yy==1980) %&gt;%
@@ -320,6 +324,16 @@ load(&#39;Pacific-region-to-keep.RData&#39;, verbose=TRUE)</code></pre>
             effort=sum(hhooks)) %&gt;%
   mutate(cpue=catch/effort)
 head(yft80)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+## # Groups:   lond [2]
+##    lond  latd  catch  effort  cpue
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1  112.  7.50 15077.  9469.  1.59 
+## 2  112. 12.5  43255. 32155.  1.35 
+## 3  112. 17.5  28845. 20460.  1.41 
+## 4  118.  7.50     3.    24.0 0.125
+## 5  118. 12.5  72636. 40392.  1.80 
+## 6  118. 17.5  90347. 73139.  1.24</code></pre>
 </div>
 </div>
 <div id="making-the-map" class="section level1">
@@ -330,6 +344,7 @@ head(yft80)</code></pre>
   theme_bw() + 
   coord_equal() + 
   scale_fill_distiller(palette=&#39;Spectral&#39;)</code></pre>
+<p><img src="intro-to-maps-in-R_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <div id="adding-continents-to-my-map" class="section level2">
 <h2>Adding continents to my map</h2>
 <p><code>world2Hires</code> is a high resolution database of continent outlines The <code>2</code> means it’s the Pacific-centred version</p>
@@ -343,6 +358,7 @@ states &lt;- all_states %&gt;% filter(region %in% reg2keep)</code></pre>
   theme_bw() + 
   coord_equal(xlim=c(100,280), ylim=c(-50,50)) + 
   scale_fill_distiller(palette=&#39;Spectral&#39;)</code></pre>
+<p><img src="intro-to-maps-in-R_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 </div>
 
