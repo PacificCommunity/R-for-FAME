@@ -1,72 +1,397 @@
----
-title: "Maps in R (!!!)"
-author: "Laura Tremblay-Boyer"
-date: "5 April 2018"
-output: 
- html_document: 
-  toc: true
-  toc_float: true
----
+<!DOCTYPE html>
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
-                      message = FALSE, # shuts down messages
-                      warning = FALSE, 
-                      cache = TRUE) # saves chunk content so it doesn't rerun everytime
-```
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-```{r}
-library(tidyverse)
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Laura Tremblay-Boyer" />
+
+
+<title>Maps in R (!!!)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R for FAME</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="data-manip-no1.html">First R session</a>
+</li>
+<li>
+  <a href="intro-to-maps-in-R.html">Intro to maps session</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Maps in R (!!!)</h1>
+<h4 class="author"><em>Laura Tremblay-Boyer</em></h4>
+<h4 class="date"><em>5 April 2018</em></h4>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
 options(stringsAsFactors=FALSE) # turn-off automatic factors
 library(maps)
 library(mapdata)
 library(maptools)
-load('Pacific-region-to-keep.RData', verbose=TRUE)
-```
-
-# Data import and formatting
-In R data objects have extension .RData, then can be saved with `save()` and loaded back in R with `load()`
-
-```{r}
-load('lbest-sample.RData', verbose=TRUE) #lbest
-```
-
-## Data formatting
-```{r}
-yft80 <- lbest %>% filter(yy==1980) %>%
-  group_by(lond, latd) %>% 
+load(&#39;Datasets/Pacific-region-to-keep.RData&#39;, verbose=TRUE)</code></pre>
+<pre><code>## Loading objects:
+##   reg2keep</code></pre>
+<div id="data-import-and-formatting" class="section level1">
+<h1>Data import and formatting</h1>
+<p>In R data objects have extension .RData, then can be saved with <code>save()</code> and loaded back in R with <code>load()</code></p>
+<pre class="r"><code>load(&#39;Datasets/lbest-sample.RData&#39;, verbose=TRUE) #lbest</code></pre>
+<pre><code>## Loading objects:
+##   lbest</code></pre>
+<div id="data-formatting" class="section level2">
+<h2>Data formatting</h2>
+<pre class="r"><code>yft80 &lt;- lbest %&gt;% filter(yy==1980) %&gt;%
+  group_by(lond, latd) %&gt;% 
   summarise(catch=sum(yft_no), 
-            effort=sum(hhooks)) %>%
+            effort=sum(hhooks)) %&gt;%
   mutate(cpue=catch/effort)
-head(yft80)
-```
-
-# Making the map 
-The ggplot function to do heatmaps is called `geom_tile()`
-```{r}
-ggplot() + 
-  geom_tile(data=yft80, aes(x=lond, y=latd, fill=cpue), colour='white') +
+head(yft80)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+## # Groups:   lond [2]
+##    lond  latd  catch  effort  cpue
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1  112.  7.50 15077.  9469.  1.59 
+## 2  112. 12.5  43255. 32155.  1.35 
+## 3  112. 17.5  28845. 20460.  1.41 
+## 4  118.  7.50     3.    24.0 0.125
+## 5  118. 12.5  72636. 40392.  1.80 
+## 6  118. 17.5  90347. 73139.  1.24</code></pre>
+</div>
+</div>
+<div id="making-the-map" class="section level1">
+<h1>Making the map</h1>
+<p>The ggplot function to do heatmaps is called <code>geom_tile()</code></p>
+<pre class="r"><code>ggplot() + 
+  geom_tile(data=yft80, aes(x=lond, y=latd, fill=cpue), colour=&#39;white&#39;) +
   theme_bw() + 
   coord_equal() + 
-  scale_fill_distiller(palette='Spectral')
-```
-
-## Adding continents to my map 
-`world2Hires` is a high resolution database of continent outlines
-The `2` means it's the Pacific-centred version
-```{r}
-all_states <- map_data('world2Hires')
-reg2keep <- c(reg2keep, 'Vietnam')
-states <- all_states %>% filter(region %in% reg2keep)
-```
-
-Now that I have formatted by continent dataset, I can add it 
-as a layer to ggplot: 
-```{r}
-ggplot() + 
-  geom_tile(data=yft80, aes(x=lond, y=latd, fill=cpue), colour='white') +
-  geom_polygon(data=states, aes(x=long, y=lat, group=group), fill='grey95', colour='navy') + 
+  scale_fill_distiller(palette=&#39;Spectral&#39;)</code></pre>
+<p><img src="intro-to-maps-in-R_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div id="adding-continents-to-my-map" class="section level2">
+<h2>Adding continents to my map</h2>
+<p><code>world2Hires</code> is a high resolution database of continent outlines The <code>2</code> means it’s the Pacific-centred version</p>
+<pre class="r"><code>all_states &lt;- map_data(&#39;world2Hires&#39;)
+reg2keep &lt;- c(reg2keep, &#39;Vietnam&#39;)
+states &lt;- all_states %&gt;% filter(region %in% reg2keep)</code></pre>
+<p>Now that I have formatted by continent dataset, I can add it as a layer to ggplot:</p>
+<pre class="r"><code>ggplot() + 
+  geom_tile(data=yft80, aes(x=lond, y=latd, fill=cpue), colour=&#39;white&#39;) +
+  geom_polygon(data=states, aes(x=long, y=lat, group=group), fill=&#39;grey95&#39;, colour=&#39;navy&#39;) + 
   theme_bw() + 
   coord_equal(xlim=c(100,280), ylim=c(-50,50)) + 
-  scale_fill_distiller(palette='Spectral')
-```
+  scale_fill_distiller(palette=&#39;Spectral&#39;)</code></pre>
+<p><img src="intro-to-maps-in-R_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+
+<p padding-top: 3cm>Copyright &copy; 2018 Pacific Community. All rights reserved.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
