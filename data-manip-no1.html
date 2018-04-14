@@ -181,6 +181,9 @@ $(document).ready(function () {
 <li>
   <a href="data-manip-no1.html">First R session</a>
 </li>
+<li>
+  <a href="intro-to-maps-in-R.html">Intro to maps session</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -200,8 +203,8 @@ $(document).ready(function () {
 
 <pre class="r"><code># Working directory
 # To know what my working directory is right now
-#getwd()
-#setwd()
+getwd()
+setwd()
 
 list.files(pattern=&#39;.csv&#39;)
 list.files(&#39;Datasets/&#39;, pattern=&#39;.csv&#39;)
@@ -293,7 +296,7 @@ datfocus &lt;- filter(van1, sp_name == focussp)
 sum(datfocus$catch_n==0)
 mean(datfocus$catch_n==0)</code></pre>
 
-<p padding-top: 3cm>Copyright &copy; 2017 Pacific Community. All rights reserved.</p>
+<p padding-top: 3cm>Copyright &copy; 2018 Pacific Community. All rights reserved.</p>
 
 
 
