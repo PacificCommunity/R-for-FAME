@@ -1,0 +1,42 @@
+---
+title: "My first automatic report :)"
+author: "Laura Tremblay-Boyer"
+date: "4 April 2018"
+output: 
+  html_document:
+    toc: true
+---
+
+# Introduction
+## Dataset description
+### Figure:
+This is the average *catch* for the Vanuatu dataset.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+options(stringsAsFactors = FALSE)
+library(tidyverse)
+library(lubridate)
+vanuatu.dat <- read.csv('Datasets/Vanuatu report 65.csv')
+van1 <- dplyr::select(vanuatu.dat, 
+                      trip_date, sp_name, sp_code, 
+                      catch_n=sp_n, catch_kg=sp_kg)
+focussp <- "DEEPWATER RED SNAPPER"
+van1$datefrm <- mdy_hms(van1$trip_date)
+van1$Month <- month(van1$datefrm)
+moncatch <- van1 %>% filter(sp_name==focussp) %>%
+  group_by(Month) %>% 
+  summarise(catch=mean(catch_kg), 
+            catchsd=sd(catch_kg), 
+            maxn=max(catch_n))
+theme_set(theme_bw()) # set theme
+# aes aesthetics
+ggplot(data=moncatch, 
+       aes(x=Month, y=catch)) +
+  geom_point(colour='dodgerblue') + 
+  geom_line(colour='green') +
+  theme_bw() +
+  ggtitle('Average catch')
+```
+
+## Analysis of results
+The total catch for `r focussp` is `r sum(moncatch$catch)`.
