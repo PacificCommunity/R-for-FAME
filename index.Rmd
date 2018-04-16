@@ -3,3 +3,5 @@ title: "Hello!"
 ---
 
 The fun with goats starts and ends here!
+
+![](sheepy.jpg)
