@@ -13,6 +13,8 @@ navbar:
     - text: "First R session"
       href: data-manip-no1.html
     - text: "My first markdown"
-      href: my-first-markdown.html     
+      href: my-first-markdown.html 
+    - text: "Quick ggplot reference"
+      href: quick-ggplot-reference.html      
     - text: "Intro to maps session"
       href: intro-to-maps-in-R.html

@@ -1,0 +1,113 @@
+---
+title: "All the ggplots"
+author: "Laura Tremblay-Boyer"
+date: "5 April 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      cache = TRUE, 
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+```{r}
+options(stringsAsFactors = FALSE) # turn-off character as factors
+library(tidyverse)
+library(lubridate)
+## Loading my data
+vanuatu.dat <- read.csv('Datasets/Vanuatu report 65.csv')
+van1 <- dplyr::select(vanuatu.dat, 
+                      trip_date, sp_name, sp_code, 
+                      catch_n=sp_n, catch_kg=sp_kg)
+focussp <- "DEEPWATER RED SNAPPER"
+
+van1$datefrm <- mdy_hms(van1$trip_date)
+van1$Month <- month(van1$datefrm)
+van1$Year <- year(van1$datefrm)
+
+vanfilt <- van1 %>% filter(sp_name==focussp)
+moncatch <- vanfilt %>% 
+  group_by(Month) %>% 
+  summarise(catch=mean(catch_kg), 
+            catchsd=sd(catch_kg), 
+            maxn=max(catch_n))
+```
+
+# Making a line plot in ggplot
+```{r lineplot}
+theme_set(theme_bw())
+ggplot(moncatch, aes(x=Month, y=catch), size=2) + 
+  geom_line(colour='dodgerblue') + geom_point()
+
+```
+Common error message: `invalid argument to unary operator`
+
+# Making a panel line plot in ggplot 
+Show the monthly catch by year, for 2015, 2016 and 2017
+```{r}
+names(vanfilt)
+ymoncatch <- vanfilt %>% 
+  group_by(Month, Year) %>% 
+  summarise(catch=mean(catch_kg), 
+            catchsd=sd(catch_kg), 
+            maxn=max(catch_n)) %>%
+  filter(Year %in% 2015:2017)
+unique(ymoncatch$Year)
+ymoncatch
+```
+
+Now let's make the plot:
+To make panels, use `facet_wrap()`
+```{r ymonpanel}
+theme_set(theme_bw())
+ggplot(ymoncatch, aes(x=Month, y=catch, colour=as.factor(Year))) + geom_point() + geom_line() + facet_wrap(~Year)
+```
+
+Plotting with panels in rows intead, use the function 
+`facet_grid()` (can also use `facet_wrap` with `ncol=1`)
+```{r ymonpanel2}
+theme_set(theme_bw())
+ggplot(ymoncatch, aes(x=Month, y=catch, colour=as.factor(Year))) + geom_point() + geom_line() + 
+  facet_grid(Year~.)
+```
+
+Plotting with a barplot instead of lines 
+```{r}
+ggplot(ymoncatch, 
+       aes(x=Month, y=catch, fill=as.factor(Year))) + 
+  geom_bar(stat='identity', position='dodge')
+```
+
+Mixing up barplot with panels
+```{r}
+ggplot(ymoncatch, 
+       aes(x=Month, y=catch, fill=as.factor(Year))) + 
+  geom_bar(stat='identity') + 
+  facet_wrap(~Year, scale='free_y') + theme_bw() +
+  scale_fill_manual(values=c('dodgerblue', 'turquoise', 'indianred'))
+```
+
+# Exercise
+From the Vanuatu dataset, make a month-panel bar plot of the annual average catch (kg) for dogtooth tuna (all years before the future).
+
+## Filter dataset for dogtooth tuna, and calculate average 
+catch by year and month 
+```{r}
+# find out how dogtooth tuna is referred to in sp_name column
+# unique(grep('TUNA',van1$sp_name, value=TRUE))
+dogt <- van1 %>%
+  filter(sp_name == 'DOGTOOTH TUNA') %>% 
+  group_by(Year, Month) %>% 
+  summarise(avgcatch=mean(catch_kg)) %>% 
+  filter(Year < 2019)
+```
+
+Make the plot now that I have created my dataset `dogt`
+```{r}
+ggplot(dogt, aes(x=Year, y=avgcatch)) + 
+  geom_bar(stat='identity') + facet_wrap(~Month) +
+  theme_bw()
+```
+
